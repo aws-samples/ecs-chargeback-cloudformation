@@ -1,0 +1,22 @@
+[
+    {
+      "ParameterKey": "DestinationBucket",
+      "ParameterValue": ""
+    }, 
+    {
+      "ParameterKey": "ManRoleARN",
+      "ParameterValue": ""
+    }, 
+    {
+      "ParameterKey": "CodeBucket",
+      "ParameterValue": ""
+    }, 
+    {
+      "ParameterKey": "EcsDataFileURL",
+      "ParameterValue": ""
+    }, 
+    {
+      "ParameterKey": "GetAccountsFileURL",
+      "ParameterValue": ""
+    }
+  ]

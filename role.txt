@@ -1,0 +1,50 @@
+# Role name ECS_Read_Only_Role
+
+# Policy
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "ecs:ListAttributes",
+                "ecs:DescribeTaskSets",
+                "ecs:DescribeTaskDefinition",
+                "ecs:DescribeClusters",
+                "ecs:ListServices",
+                "ecs:ListAccountSettings",
+                "ecs:DescribeCapacityProviders",
+                "ecs:ListTagsForResource",
+                "ecs:ListTasks",
+                "ecs:ListTaskDefinitionFamilies",
+                "ecs:DescribeServices",
+                "ecs:ListContainerInstances",
+                "ecs:DescribeContainerInstances",
+                "ecs:DescribeTasks",
+                "ecs:ListTaskDefinitions",
+                "ecs:ListClusters"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+
+#Trusted relationship
+
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS":[
+          "arn:aws:iam::<AnalyticsAccountID>:role/Lambda-Role-ecs-services-clusters",
+          "arn:aws:iam::<AnalyticAccountID>:root"
+        ]
+      },
+      "Action": "sts:AssumeRole",
+      "Condition": {}
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Main CF template that builds shared resources and other stacks
+Parameters:
+  DestinationBucket:
+    Type: String
+    Description: Name of the S3 Bucket that needs to be created to hold ecs information
+    AllowedPattern: (?=^.{3,63}$)(?!^(\d+\.)+\d+$)(^(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])$)
+  ManRoleARN:
+    Type: String
+    Description: Copy arn:aws:iam::123456789:role/Lambda-Assume-Role-ecs-services-clusters and replace with management account id. This will be the ARN of the IAM role that will be deployed in the management account which can retrieve AWS Org data. 
+  CodeBucket:
+    Type: String
+    Description:  Name of the S3 Bucket that exists and holds the code for the nested cf and python for ecs zipped
+  DatabaseName:
+    Type: String
+    Description: Name of the Athena database to hold lambda information
+    Default: managementcur
+  ECSRoleName:
+    Type: String
+    Description: Name of the IAM role deployed in all accounts which can retrieve AWS ECS Data.
+    Default: ECS_Read_Only_Role
+  EcsDataFileURL:
+    Type: String
+    Description: The S3 URL for the ecs_data.yaml file that was uploaded to s3. Please check your object as it maybe different to default
+    Default: "https://${CodeBucket}.s3-${Region}.amazonaws.com/cloudformation/ecs_data.yaml"
+  GetAccountsFileURL:
+    Type: String
+    Description: The S3 URL for the get_accounts.yaml file that was uploaded to s3. Please check your object as it maybe different to default
+    Default: "https://${CodeBucket}.s3-${Region}.amazonaws.com/cloudformation/get_accounts.yaml"
+Resources:
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName:
+        Ref: DestinationBucket
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+  ECSStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Ref EcsDataFileURL
+      TimeoutInMinutes: 2
+      Parameters:
+        DestinationBucket: !Ref DestinationBucket
+        GlueRoleArn: !GetAtt GlueRole.Arn 
+        DatabaseName: !Ref DatabaseName
+        CodeBucket: !Ref CodeBucket
+        ECSRoleName: !Ref ECSRoleName
+  AccountCollector:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Ref GetAccountsFileURL
+      TimeoutInMinutes: 2
+      Parameters:
+        RoleName: !Ref ManRoleARN
+        ECSLambdaARN: !GetAtt 'ECSStack.Outputs.LambdaFunctionARN'
+  GlueRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: AWS-Cost-Explorer-Glue-Crawler
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - glue.amazonaws.com
+        Version: 2012-10-17
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole
+      Path: /
+      Policies:
+        - PolicyName: "Put-S3"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "s3:PutObject"
+                  - "s3:GetObject"
+                Resource: !Join
+                          - ''
+                          - - !GetAtt S3Bucket.Arn 
+                            - '*'
+  
+Outputs:
+  S3Bucket:
+    Description: Name of S3 Bucket which will store the AWS ECS Data
+    Value:
+      Ref: S3Bucket
+  S3BucketARN:
+    Description: ARN of S3 Bucket which will store the AWS ECS Data
+    Value:
+       Fn::GetAtt:
+        - S3Bucket
+        - Arn 
+  GlueCrawlerRoleARN:
+    Value:
+      Fn::GetAtt:
+        - GlueRole
+        - Arn
+

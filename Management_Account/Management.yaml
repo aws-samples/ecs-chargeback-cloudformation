@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Deploys a role to management account so we can assume to read data using a lambda 
+Parameters:
+  CFDataName:
+    Type: String
+    Description: The name of what this cf is doing.
+    Default: 'ecs-services-clusters'
+  AnalyticsAccountID:
+    Type: String
+    Description: AccountId of where the collector is deployed
+Resources:
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "Lambda-Assume-Role-${CFDataName}"
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              AWS:
+              #  - !Sub "arn:aws:iam::${AnalyticsAccountID}:role/AWS-Orgonisation-Data-Execute-Lambda-Role" 
+                - !Sub "arn:aws:iam::${AnalyticsAccountID}:role/AWS-Orgonisation-Account-Collector-Role"
+        Version: 2012-10-17
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSLambdaExecute
+      Path: /
+      Policies:
+        - PolicyName: !Sub "${CFDataName}-permissons"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "organizations:ListAccounts"
+                  - "organizations:ListCreateAccountStatus"
+                  - "organizations:DescribeOrganization"
+                  - "organizations:ListTagsForResource"
+                Resource: "*"
