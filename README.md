@@ -44,8 +44,8 @@ If your CUR is in your Management account and you wish to deploy this solution i
 ``` cd .. ```
 ```aws s3 cp source/ecs.py.zip s3://<CodeBucket>/cloudformation/ecs.py.zip```
 
-* Create a Role called *ECS_Read_Only_Role* in all accounts for which you will need to see the ECS data by using the file: *role.txt*. This file sets the appropriate permissons and trusted relationships.
-Before creating the roles, edit the "Trusted Relationship" section in the role.txt file by replacing *<AnalyticsAccountID>* with the ID of the Analytics Account where the collector will be placed. 
+* Create a Role called *ECS_Read_Only_Role* in all accounts for which you will need to see the ECS data by using the file: *role.txt*. This file sets the appropriate permissons and trusted relationships. 
+Before creating the roles, edit the "Trusted Relationship" section in the role.txt file by replacing *<AnalyticsAccountID>* with the ID of the Analytics Account where the collector will be placed. You can roll this out through all accounts in your org by using StackSets, see information [here](https://aws.amazon.com/blogs/aws/new-use-aws-cloudformation-stacksets-for-multiple-accounts-in-an-aws-organization/)
 
 ## Main Steps:
 1. Follow and successfully complete the steps for either the AWS CLI or Console deployment options
