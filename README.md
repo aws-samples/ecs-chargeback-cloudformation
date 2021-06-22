@@ -144,6 +144,10 @@ After completing the deployment of the solution using either option above, you c
 * Execute the query
 
 
+### Example Output
+
+![Picture](Example_output.png)
+
 ---
 **NOTE**
 
