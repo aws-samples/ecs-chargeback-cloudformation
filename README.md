@@ -148,6 +148,15 @@ After completing the deployment of the solution using either option above, you c
 
 ![Picture](Example_output.png)
 
+Breakdown: 
+* total_usage: total memory resources reserved (in GBs) by all tasks over the billing period (i.e. – monthly)
+* percent: task_usage / total_usage
+* ec2_cost: monthly cost for EC2 instance in $
+* Services: Name of service 
+* servicearn: Arn of service
+* Value: Value of specified tag for the ECS service (could be App, TeamID, etc?)
+
+**Made by OPTICS**
 ---
 **NOTE**
 
