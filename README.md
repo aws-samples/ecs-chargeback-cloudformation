@@ -30,6 +30,7 @@ If your CUR is in your Management account and you wish to deploy this solution i
 * A CUR file has been established for the existing Management/Payer account within the Billing Console. 
 * The ECS Cluster leveraging EC2 instances for compute resides in a Linked Account connected to the Management Account through the "Consolidated Billing" option within the Billing Console. 
 * AWS generated tag is active in Cost Allocation Tags *resource_tags_aws_ecs_service_Name*
+* User-defined cost allocation tags *Name* is active
 * You will need an S3 bucket in your Analytics account to upload source files into
 
 ### Code setup
