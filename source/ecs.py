@@ -52,7 +52,7 @@ def lambda_handler(event, context):
                                         data = {
                                             "cluster": cluster.split("/")[1],
                                             "service": service.get("serviceName"),
-                                            "servicesARN": i, #.split("/")[2]
+                                            "servicearn": i, #.split("/")[2]
                                             "tags": service.get("tags"),
                                             "account_id":account_id
 
