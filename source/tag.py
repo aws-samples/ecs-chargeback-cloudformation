@@ -1,6 +1,9 @@
 import boto3
 from botocore.exceptions import ClientError
 
+
+# This script can be used to tag ECS Tasks with Name = Service name which have not used the propergate at creation setting
+# In the bu_usage_view.sql line 49 resource_tags_aws_ecs_service_name can be changed too resource_tags_user_name and this.
 def main():
     client = boto3.client('ecs', region_name = "us-east-2")
     
@@ -63,6 +66,7 @@ def main():
                                 },
                             ]
                         )
+                        print(f"{task_arn} now tagged with Name:{service_name}")
         except ClientError as e:
             print(e)
             pass
