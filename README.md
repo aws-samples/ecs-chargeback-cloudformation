@@ -32,8 +32,8 @@ If your CUR is in your Management account and you wish to deploy this solution i
 * AWS generated tag is active in Cost Allocation Tags *resource_tags_aws_ecs_service_Name*
 * User-defined cost allocation tags *Name* is active
 * You will need an S3 bucket in your Analytics account to upload source files into
-* Your Tasks MUST have the Name of the Service as a tag *Name*. This is best done with [Tag propagation](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-using-tags.html) on creation, see below:
-![ECS_Tag_Config](ECS_Tag_Config.pngg)
+* Your Tasks MUST have the Name of the Service as a tag *Name*. This is best done with [Tag propagation](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-using-tags.html) on service creation, see below:
+![ECS_Tag_Config](ECS_Tag_Config.png)
 
 ### Code setup
 * Upload files to s3 bucket of your choice in Analytics account but they both must be in the *same Region*. This will be reffered to as *CodeBucket* in the parameters. Make sure you load them into a *cloudformation* folder.
