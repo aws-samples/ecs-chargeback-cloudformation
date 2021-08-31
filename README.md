@@ -32,11 +32,12 @@ If your CUR is in your Management account and you wish to deploy this solution i
 * AWS generated tag is active in Cost Allocation Tags *resource_tags_aws_ecs_service_Name*
 * User-defined cost allocation tags *Name* is active
 * You will need an S3 bucket in your Analytics account to upload source files into
-* Your Tasks MUST have the Name of the Service as a tag *Name*. This is best done with [Tag propagation](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-using-tags.html) on creation, see below:
-![ECS_Tag_Config](ECS_Tag_Config.pngg)
+* Your Tasks MUST have the Name of the Service as a tag *Name*. This is best done with [Tag propagation](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-using-tags.html) on service **creation**, see below:
+![ECS_Tag_Config](ECS_Tag_Config.png)
+	- Note: If you cannot re-create your task using this the see the [source/tag.py](source/tag.py)
 
 ### Code setup
-* Upload files to s3 bucket of your choice in Analytics account but they both must be in the *same Region*. This will be reffered to as *CodeBucket* in the parameters. Make sure you load them into a *cloudformation* folder.
+* Upload files to s3 bucket of your choice in Analytics account but they both must be in the *same Region*. This will be referred to as *CodeBucket* in the parameters. Make sure you load them into a *cloudformation* folder.
 
 ```aws s3 cp Analytics_Account/ecs_data.yaml s3://<CodeBucket>/cloudformation/ecs_data.yaml```
 
@@ -47,7 +48,7 @@ If your CUR is in your Management account and you wish to deploy this solution i
 ``` cd .. ```
 ```aws s3 cp source/ecs.py.zip s3://<CodeBucket>/cloudformation/ecs.py.zip```
 
-* Create a Role called *ECS_Read_Only_Role* in all accounts for which you will need to see the ECS data by using the file: *role.txt*. This file sets the appropriate permissons and trusted relationships. 
+* Create a Role called *ECS_Read_Only_Role* in all accounts for which you will need to see the ECS data by using the file: *role.txt*. This file sets the appropriate permissions and trusted relationships. 
 Before creating the roles, edit the "Trusted Relationship" section in the role.txt file by replacing *<AnalyticsAccountID>* with the ID of the Analytics Account where the collector will be placed. You can roll this out through all accounts in your org by using StackSets, see information [here](https://aws.amazon.com/blogs/aws/new-use-aws-cloudformation-stacksets-for-multiple-accounts-in-an-aws-organization/)
 
 ## Main Steps:
@@ -87,7 +88,7 @@ Ensure you have the AWS CLI installed on your machine in order to execute the co
 
 #### Step 2: Configure Management Account
 
-* Login to your Managment account and go to the CloudFormation service page
+* Login to your Management account and go to the CloudFormation service page
 * Click on the "Create Stack" drop down list and select the option "with new resources" 
 * Under the Section "Specify template" select the option "Upload a template"
 * Select "Choose file" and upload the *Management.yaml* file inside the Management_Account folder
@@ -116,8 +117,8 @@ After completing the deployment of the solution using either option above, you c
 * Navigate to the Athena service
 * Select the appropriate "Data source" and "Database" containing your pre-existing CUR file
 	-- NOTE: The Database should be the same name as the "DatabaseName" parameter in the "management" YAML file 
-* If the previous steps were successfull you will see a new table named "ecs_services_clusters_data"
-* If the new table is there, preview the data by left-clicking on the 3 verticle dots to the right of the table name and select "Preview Table"
+* If the previous steps were successful you will see a new table named "ecs_services_clusters_data"
+* If the new table is there, preview the data by left-clicking on the 3 vertical dots to the right of the table name and select "Preview Table"
 
 ### Athena Configuration
 
