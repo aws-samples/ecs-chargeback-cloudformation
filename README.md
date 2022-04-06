@@ -32,7 +32,7 @@ If your CUR is in your Management account and you wish to deploy this solution i
 * AWS generated tag is active in Cost Allocation Tags *resource_tags_aws_ecs_service_Name*
 * User-defined cost allocation tags *Name* is active
 * You will need an S3 bucket in your Analytics account to upload source files into
-* Your Tasks MUST have the Name of the Service as a tag *Name*. This is best done with [Tag propagation](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-using-tags.html) on service **creation**, see below:
+* Your Tasks **MUST** have the Name of the Service as a tag *Name*. This is best done with [Tag propagation](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-using-tags.html) on service **creation**, see below:
 ![ECS_Tag_Config](ECS_Tag_Config.png)
 	- Note: If you cannot re-create your task using this the see the [source/tag.py](source/tag.py)
 
@@ -125,24 +125,23 @@ After completing the deployment of the solution using either option above, you c
 * Navigate to the Athena service
 * Select the appropriate "Data source" and "Database" containing your pre-existing CUR file
 	-- NOTE: The Database should be the same name as the "DatabaseName" parameter in the "management" YAML file 
-* Open a new query and paste in the SQL query from the file: "cluster_metadata_view" located in the nested "Athena" folder housed in the same folder the yaml files reside.
+* Open a new query and paste in the SQL query from the file: **"cluster_metadata_view"**" located in the nested "Athena" folder housed in the same folder the yaml files reside.
 * Execute the query
-* Open a new query and paste in the SQL query from the file: "ec2_cluster_costs_view" located in the nested "Athena" folder housed in the same folder the yaml files reside.
+* Open a new query and paste in the SQL query from the file: **"ec2_cluster_costs_view"**" located in the nested "Athena" folder housed in the same folder the yaml files reside.
 	-- Replace ${CUR} in the "FROM" clause with your CUR table name 
 	-- For example, "curdb"."ecs_services_clusters_data" 
 * Execute the query
-* Open a new query and paste in the SQL query from the file: "bu_usage_view" located in the nested "Athena" folder housed in the same folder the yaml files reside.
+* Open a new query and paste in the SQL query from the file: **"bu_usage_view"**" located in the nested "Athena" folder housed in the same folder the yaml files reside.
 	-- Replace ${CUR} in the "FROM" clause with your CUR table name 
 	-- For example, "curdb"."ecs_services_clusters_data"
-* Execute the query 
 
 
-### Manually execute report
+### Manually execute billing report
 
 * Login to your Analytics Account and navigate to the Athena service
 * Select the appropriate "Data source" and "Database" containing your pre-existing CUR file
 	-- NOTE: The Database should be the same name as the "DatabaseName" parameter in the "management" YAML file 
- * Open a new query and paste in the SQL query from the file: "ecs_chargeback_report" located in the nested "Athena" folder housed in the same folder the yaml files reside.
+ * Open a new query and paste in the SQL query from the file: **"ecs_chargeback_report"** located in the nested "Athena" folder housed in the same folder the yaml files reside.
 	-- Replace "bu_usage_view.month" value with the appropriate month desired for the report
 	-- For example, a value of '2' returns the charges for February 
 * Execute the query
@@ -153,7 +152,7 @@ After completing the deployment of the solution using either option above, you c
 ![Picture](Example_output.png)
 
 Breakdown: 
-* total_usage: total memory resources reserved (in GBs) by all tasks over the billing period (i.e. – monthly)
+* task_usage: total memory resources reserved (in GBs) by all tasks over the billing period (i.e. – monthly)
 * percent: task_usage / total_usage
 * ec2_cost: monthly cost for EC2 instance in $
 * Services: Name of service 
