@@ -1,7 +1,7 @@
 -- FINAL
 SELECT bu_usage_view.line_item_usage_account_id, sum(sum_line_item_usage_amount) AS task_usage, total_usage, (sum(sum_line_item_usage_amount)/total_usage) as "percent",  ec2_cost, ((sum(sum_line_item_usage_amount)/total_usage)*ec2_cost) as ecs_cost,
          "cluster",
-         services,
+         service,
          servicearn,
          value,
          bu_usage_view.month,
